@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNA Visualization with D3.js</title>
+    <style>
+        .node {
+            stroke-width: 2px; /* Outline width */
+        }
+
+        .link {
+            stroke: #455a64;
+            stroke-opacity: 0.8;
+            fill: none;
+            stroke-width: 3px;  /* Bold lines for base pairs */
+        }
+
+        .sequence-link {
+            stroke: #9e9e9e;
+            stroke-opacity: 0.8;
+            stroke-width: 3px;  /* Bold lines for sequence connections */
+            stroke-dasharray: 3, 3;  /* Adjusted dash for a slightly larger pattern */
+        }
+
+        .label {
+            font-size: 12px; /* Adjust label size to fit inside circles */
+            font-family: Arial, sans-serif;
+            pointer-events: none; /* Make labels non-interactive */
+            text-anchor: middle; /* Center text horizontally */
+            dominant-baseline: central; /* Center text vertically */
+            fill: white; /* Set label color to white */
+        }
+    </style>
+</head>
+<body>
+    <svg width="800" height="600"></svg>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        const sequence = "{{ sequence }}";
+        const pairs = {{ pairs|tojson }};
+        const width = 1000;
+        const height = 800;
+        const radius = 10; // Increase radius for better visibility of text
+
+        const svg = d3.select("svg")
+                      .attr("width", width)
+                      .attr("height", height)
+                      .append("g")
+                      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        function colorForBase(base) {
+            switch (base) {
+                case 'A': return 'blue';
+                case 'U': return 'green';
+                case 'G': return 'black';
+                case 'C': return 'orange';
+                default: return 'gray'; // Default color for unexpected characters
+            }
+        }
+
+        function drawRNA() {
+            // Calculate positions of nodes in a circle
+            const angleStep = 2 * Math.PI / sequence.length;
+            const nodes = sequence.split('').map((base, i) => {
+                const angle = i * angleStep;
+                return {
+                    x: 250 * Math.cos(angle),
+                    y: 250 * Math.sin(angle),
+                    base
+                };
+            });
+
+            // Links based on pairs
+            const links = pairs.map(pair => ({
+                source: nodes[pair[0]],
+                target: nodes[pair[1]]
+            }));
+
+            // Sequence links for connecting all nodes
+            const sequenceLinks = nodes.map((node, i) => {
+                if (i < nodes.length - 1) {
+                    return {
+                        source: nodes[i],
+                        target: nodes[i + 1]
+                    };
+                }
+            }).filter(link => link !== undefined);
+
+            // Draw sequence links
+            svg.selectAll(".sequence-link")
+                .data(sequenceLinks)
+                .enter().append("line")
+                .classed("sequence-link", true)
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            // Draw links for pairs
+            svg.selectAll(".link")
+                .data(links)
+                .enter().append("line")
+                .classed("link", true)
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            // Draw nodes
+            svg.selectAll(".node")
+                .data(nodes)
+                .enter().append("circle")
+                .classed("node", true)
+                .attr("r", radius)
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .style("fill", d => colorForBase(d.base)) // Color coding based on base
+                .style("stroke", d => colorForBase(d.base)); // Color coding for outline
+
+            // Add labels
+            svg.selectAll(".label")
+                .data(nodes)
+                .enter().append("text")
+                .classed("label", true)
+                .attr("x", d => d.x)
+                .attr("y", d => d.y)
+                .text(d => d.base);
+        }
+
+        drawRNA();
+    </script>
+</body>
+</html>

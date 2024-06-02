@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RNA Secondary Structure</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <video autoplay muted loop id="videoBackground">
+        <source src="unga.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <header>
+        <nav>
+            <ul>
+                
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="comparison.html">Comparison</a></li>
+            <li><a href="KPS_example.html">Example</a></li>
+            <li><a href="kps_interactive.html">Implementation</a></li>
+            <li><a href="kps_references.html">References</a></li>
+            <li><a href="main.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- Introduction Section -->
+        <section id="introduction" class="content-section">
+            <!-- Content here -->
+            <h1>Introduction to Predicting RNA Secondary Structure</h1>
+    <br>
+    <h2>The Importance of the Problem</h2>
+    <p>RNA molecules are pivotal to various biological functions, from genetic regulation to protein synthesis. Unlike DNA, RNA is single-stranded, allowing it to fold into complex secondary structures that are crucial for its activity. The specific pairing and folding patterns of RNA dictate its functional capabilities and interactions within a cell. Understanding and predicting these structures is essential for advancing our knowledge in molecular biology, medicine, and biotechnology.</p>
+    <p>The ability to predict RNA secondary structure computationally offers numerous benefits, such as aiding in the design of RNA-based therapeutics and understanding genetic diseases. However, the problem is inherently challenging due to the complex rules governing RNA structure and the vast number of potential configurations.</p>
+<br>
+    <h2>How To Solve the Problem</h2>
+    <p>The computational approach to predicting RNA secondary structure involves creating a dynamic programming algorithm to determine the most stable configuration under given constraints. The key to this algorithm is defining the optimal structure (OPT) for a given RNA segment. By breaking down the problem into smaller sub-problems, we can efficiently calculate the maximum number of stable base pairs for each RNA segment.</p>
+    <ol>
+        <li><strong>Dynamic Programming Approach:</strong> We use a recurrence relation where the OPT for a segment ending at base <code>j</code> is calculated based on whether <code>j</code> pairs with any preceding base <code>t</code>, separated by at least four bases to prevent sharp turns, as per biological constraints.</li>
+        <li><strong>Optimal Substructure and Overlapping Subproblems:</strong> The solution leverages the fact that the best way to fold a segment of RNA can be derived from the best ways to fold its sub-segments, which are themselves smaller instances of the same problem. This approach ensures that each subproblem is solved only once, storing the results to avoid redundant calculations.</li>
+        <li><strong>No Overlapping Pairs and Knots:</strong> The algorithm ensures that if two base pairs are included in the solution, they do not intersect or overlap, aligning with biological observations that RNA structures are generally knot-free.</li>
+    </ol>
+    <p>By systematically expanding from the simplest subproblems to more complex ones, and by using efficient data structures to store intermediate results, this dynamic programming algorithm provides a powerful tool to predict RNA secondary structure, thus opening doors to deeper biological insights and applications in drug design.</p>
+        </section>
+<br>
+        <!-- Algorithm Details Section -->
+        <section id="algorithm" class="content-section">
+            <!-- Content here -->
+            <h2>Algorithm Details</h2>
+            <h3>Function: ss_predictor</h3>
+            <p>This function takes an RNA sequence as input and returns a vector of pairs representing the maximum base pairs that can be formed without overlap or knots.</p>
+        
+            <h3>Algorithm Description:</h3>
+            <h4>Initialization</h4>
+            <p>Calculate the length of the RNA sequence. Initialize a 2D vector array <code>OPT</code> to store the optimal structures.</p>
+        
+            <h4>Base Cases Setup</h4>
+            <p>For each position <code>i</code>, set up initial conditions for positions <code>j</code> where <code>j</code> is less than or equal to <code>i + 4</code> (to ensure no sharp turns in the structure).</p>
+        
+            <h4>Dynamic Programming Fill</h4>
+            <ul>
+                <li>Iterate over all possible sub-sequence lengths starting from 5 (to satisfy the no sharp turn condition).</li>
+                <li>For each starting index <code>i</code>, compute the optimal structure for the sub-sequence ending at <code>j = i + k</code>.</li>
+                <li>Check if the current base at position <code>j</code> can form a pair with any preceding base <code>t</code> such that <code>t</code> is at least 5 bases apart from <code>j</code>.</li>
+                <li>If a valid pair is found, merge the optimal solutions from the sub-sequences split by <code>t</code> and <code>j</code> and check if this forms a better solution than not including <code>j</code> in any pair.</li>
+            </ul>
+        
+            <h4>Selecting Optimal Solution</h4>
+            <p>After iterating through all sub-sequences, the vector <code>OPT[1][n]</code> will contain the optimal set of base pairs for the entire sequence.</p>
+        
+            <h3>Function: main</h3>
+            <p>This function takes user input for an RNA sequence, calls <code>ss_predictor</code> to get the maximum base pairs, and prints the result.</p>
+           
+            <h3>User Input and Output</h3>
+            <ul>
+                <li>Input the RNA sequence.</li>
+                <li>Call <code>ss_predictor</code> and store the result.</li>
+                <li>Print the size of the result and each base pair.</li>
+            </ul>
+        <br>
+       
+        
+       
+       
+
+    <br>
+   
+    
+</section>
+</main>
+<footer>
+    <p>Documentation created by Chinmay, Dev, Parth, Dhananjay and Harsh. © 2024</p>
+</footer>
+</body>
+</html>

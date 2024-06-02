@@ -1,0 +1,121 @@
+html {
+    font-size: 15px; 
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+    justify-content: center; 
+    align-items: center; 
+    animation: backgroundAnimation 20s ease infinite; /* Adjusted time for a smoother flow */
+    background: linear-gradient(-45deg, #FFC0CB, #ADD8E6, #E0FFFF, #F08080);
+    background-size: 400% 400%;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+#videoBackground {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -200; /* Ensure video stays in the background */
+    background-size: cover;
+    background-position: center;
+}
+
+main {
+    width: 80%; 
+    max-width: 1200px; 
+    text-align: center;
+}
+.left-overlay {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 30%; /* Covers the left half of the screen */
+    height: 100%;
+    background-color: rgba(40, 114, 153, 0.3); /* Semi-transparent black */
+    display: flex;
+    align-items: center; /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+    z-index: 100; /* Ensures it's above the video but below other content */
+}
+
+#nextPageArrow img {
+    width: 60px; /* Adjust as needed for your GIF's dimensions */
+    height: auto;
+    transition: opacity 0.3s ease; /* Smooth transition for the hover effect */
+}
+
+#nextPageArrow:hover img {
+    opacity: 0.8; /* Slight opacity change on hover for feedback */
+}
+.left-overlay h1 {
+    color: white;
+    font-size: 4rem;
+    padding: 20px;
+    text-align: center;
+} 
+#nextPageArrow {
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    z-index: 200;
+    width: 60px; /* Match your arrow gif's dimensions */
+    height: 60px; /* Match your arrow gif's dimensions or set to auto if the height should adjust to the content */
+}
+
+#nextPageArrow .tooltip {
+    display: inline-block;
+    background-color: rgba(40, 114, 153, 0.3);
+    color: #fff;
+    text-align: center;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 1.4rem;
+    position: absolute;
+    bottom: 15%;  /* Center vertically relative to the arrow */
+    right: 100%;  /* Start at the left edge of the arrow */
+    transform: translateX(10px); /* Start slightly to the right - hidden behind the arrow */
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease;
+    opacity: 0; /* Start fully transparent */
+    z-index: 200;
+    white-space: nowrap;
+}
+
+#nextPageArrow:hover .tooltip {
+    transform: translateX(-8%); /* Slide out to the left */
+    opacity: 1; /* Fade in */
+}
+/* .full-overlay {
+    width: 100%;
+    transition: width 0.5s ease-in-out; 
+} */
+.left-overlay {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 30%; /* Initially covers only part of the screen */
+    height: 100%;
+    background-color: rgba(40, 114, 153, 0.3); /* Initial semi-transparent color */
+    display: flex;
+    align-items: center; /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+    z-index: 100; /* Ensures it's above the video but below other content */
+    transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out; /* Smooth transition for both properties */
+}
+
+.full-overlay {
+    width: 100%; /* Full screen overlay */
+    background-color: rgba(0, 0, 0, 0.7); /* New color when fully expanded */
+}

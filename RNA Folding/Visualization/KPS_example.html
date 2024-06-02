@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kirkpatrick-Seidel Algorithm</title>
+    <link rel="stylesheet" href="kps_example.css">
+    <script defer src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop id="videoBackground">
+        <source src="unga.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="kps2.html">Introduction</a></li>
+                <li><a href="comparison.html">Comparison</a></li>
+                <li><a href="#example">Example</a></li>
+                <li><a href="kps_interactive.html">Implementation</a></li>
+                <li><a href="kps_references.html">References</a></li>
+                <li><a href="main.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="example" style="text-align: center;">
+            <div id="rna-section" style="text-align: center">
+                <h1>Interactive Example</h1>
+                <h3>Enter RNA Sequence:</h3>
+                <form id="rnaForm">
+                    <input type="text" id="rnaInput" name="rnaInput" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <canvas id="drawingCanvas" width="1000" height="700"></canvas>
+        </section>
+    </main>
+    <footer>
+        <p>Documentation created by Chinmay, Dev, Parth, Dhananjay and Harsh. © 2024</p>
+    </footer>
+    <script>
+        var sequence = "";
+        var pairs = [];
+
+        document.getElementById('rnaForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            const RNASequence = document.getElementById('rnaInput').value.trim();
+            if (RNASequence) {
+                const maxBasePairs = ssPredictor(RNASequence);
+                sequence = RNASequence;
+                pairs = maxBasePairs.map(bp => [bp[0], bp[1]]);
+                drawRNA(); // Function to draw RNA
+            }
+        });
+
+        function ssPredictor(RNASequence) {
+            const n = RNASequence.length;
+            const OPT = Array.from({ length: n + 1 }, () => Array.from({ length: n + 1 }, () => []));
+
+            for (let i = 1; i <= n; i++) {
+                for (let j = i; j <= n && j <= i + 4; j++) {
+                    OPT[i][j] = [];
+                }
+            }
+
+            for (let k = 5; k <= n - 1; k++) {
+                for (let i = 1; i <= n - k; i++) {
+                    const j = i + k;
+                    const jthBase = RNASequence[j - 1];
+
+                    const firstArg = OPT[i][j - 1];
+                    const firstArgSize = firstArg.length;
+
+                    let secArg = [];
+                    let secArgSize = 0;
+
+                    for (let t = i; t <= j - 5; t++) {
+                        const tthBase = RNASequence[t - 1];
+                        if ((tthBase === 'A' && jthBase === 'U') || (tthBase === 'U' && jthBase === 'A') || (tthBase === 'C' && jthBase === 'G') || (tthBase === 'G' && jthBase === 'C')) {
+                            const currBp = [t, j];
+                            let currSecArg = [];
+                            currSecArg.push(currBp);
+                            if (t > i) {
+                                currSecArg = currSecArg.concat(OPT[i][t - 1]);
+                            }
+                            currSecArg = currSecArg.concat(OPT[t + 1][j - 1]);
+
+                            if (currSecArg.length > secArgSize) {
+                                secArg = currSecArg;
+                                secArgSize = currSecArg.length;
+                            }
+                        }
+                    }
+
+                    if (firstArgSize >= secArgSize) {
+                        OPT[i][j] = firstArg;
+                    } else {
+                        OPT[i][j] = secArg;
+                    }
+                }
+            }
+
+            return OPT[1][n];
+        }
+
+        function drawRNA() {
+            if (!sequence || pairs.length === 0) return;
+
+            const canvas = document.getElementById('drawingCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = 10;
+            const angleStep = 2 * Math.PI / sequence.length;
+
+            ctx.clearRect(0, 0, width, height); // Clear the canvas before drawing
+
+            // Calculate positions of nodes in a circle
+            const nodes = sequence.split('').map((base, i) => {
+                const angle = i * angleStep;
+                return {
+                    x: centerX + 300 * Math.cos(angle), // Position nodes in a circle
+                    y: centerY + 300 * Math.sin(angle),
+                    base
+                };
+            });
+
+            // Draw sequence links
+            ctx.beginPath();
+            for (let i = 0; i < nodes.length - 1; i++) {
+                ctx.moveTo(nodes[i].x, nodes[i].y);
+                ctx.lineTo(nodes[i + 1].x, nodes[i + 1].y);
+            }
+            ctx.strokeStyle = '#ccc';
+            ctx.stroke();
+
+            // Draw links for pairs
+            pairs.forEach(pair => {
+                const source = nodes[pair[0] - 1];
+                const target = nodes[pair[1] - 1];
+                ctx.beginPath();
+                ctx.moveTo(source.x, source.y);
+                ctx.lineTo(target.x, target.y);
+                ctx.strokeStyle = 'red'; // Color for base pairs
+                ctx.stroke();
+            });
+
+            // Draw nodes and mark the index beside each node
+            nodes.forEach((node, index) => {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
+                ctx.fillStyle = colorForBase(node.base);
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#003300';
+                ctx.stroke();
+
+                // Draw labels
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.fillText(node.base, node.x - 5, node.y + 4); // Adjust label positions
+
+                // Display the index beside each node
+                ctx.fillStyle = 'black'; // Color for the index text
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(index + 1, node.x + 15, node.y + 5); // Position the index beside the node
+            });
+        }
+
+        function colorForBase(base) {
+            switch (base) {
+                case 'A': return 'blue';
+                case 'U': return 'green';
+                case 'G': return 'black';
+                case 'C': return 'orange';
+                default: return 'gray'; // Default color for unexpected characters
+            }
+        }
+    </script>
+</body>
+</html>

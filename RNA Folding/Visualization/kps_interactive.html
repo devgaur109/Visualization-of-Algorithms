@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNA</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <video autoplay muted loop id="videoBackground">
+        <source src="unga.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <header>
+        <nav>
+            <ul>
+                
+                <li><a href="kps2.html">Introduction</a></li>
+                <li><a href="comparison.html">Comparison</a></li>
+                <li><a href="KPS_example.html">Example</a></li>
+                <li><a href="#implementation">Implementation</a></li>
+                <li><a href="kps_references.html">References</a></li>
+                <li><a href="main.html">Home</a></li>
+                </ul>
+        </nav>
+    </header>
+    <main>
+
+        <section id="implementation">
+            <h2> Code :</h2>
+            <strong>DP Based Prediction Algorithm</strong>
+            <pre><code>
+                #include< iostream>
+                    #include< stdlib.h>
+                    #include< bits/stdc++.h>
+                    
+                    using namespace std;
+                    
+                    vector< pair< int,int>> ss_predictor(string RNA_sequence)
+                    {
+                        int n = RNA_sequence.length();
+                        vector< pair< int,int>> OPT[n+1][n+1];
+                    
+                        for(int i = 1; i<=n; i++)
+                        {
+                            for(int j = i; j<=n && j<=i+4; j++)
+                            {
+                                OPT[i][j] = {};
+                            }
+                        }
+                    
+                        for(int k = 5; k<=n-1; k++)
+                        {
+                            for(int i = 1; i<=n-k ; i++)
+                            {
+                                int j = i + k;
+                                char jth_base = RNA_sequence[j-1];
+                    
+                                vector< pair< int,int>> first_arg = OPT[i][j-1];
+                                int first_arg_size = first_arg.size();
+                    
+                                vector< pair< int,int>> sec_arg;
+                                int sec_arg_size = 0;
+                    
+                                for(int t = i; t<=j-5; t++)
+                                {
+                                    char tth_base = RNA_sequence[t-1];
+                                    if((tth_base == 'A' && jth_base == 'U') || (tth_base == 'U' && jth_base == 'A') || (tth_base == 'C' && jth_base == 'G') || (tth_base == 'G' && jth_base == 'C'))
+                                    {
+                                        pair< int,int> curr_bp = make_pair(t,j);
+                                        vector< pair< int,int>> curr_sec_arg = {};
+                                        curr_sec_arg.push_back(curr_bp);
+                                        if(t>i)
+                                        {
+                                            curr_sec_arg.insert(curr_sec_arg.end(), OPT[i][t-1].begin(), OPT[i][t-1].end());
+                                        }
+                    
+                                        curr_sec_arg.insert(curr_sec_arg.end(),OPT[t+1][j-1].begin(),OPT[t+1][j-1].end());
+                    
+                                        if(curr_sec_arg.size()>sec_arg_size)
+                                        {
+                                            sec_arg = curr_sec_arg;
+                                            sec_arg_size = curr_sec_arg.size();
+                                        }
+                                    }
+                                }
+                    
+                                if(first_arg_size>=sec_arg_size)
+                                {
+                                    OPT[i][j] = first_arg;
+                                }
+                                else
+                                {
+                                    OPT[i][j] = sec_arg;
+                                }
+                            }
+                        }
+                        
+                        return OPT[1][n];
+                    }
+                    
+                    int main()
+                    {
+                        string RNA_sequence;
+                        cin>>RNA_sequence;
+                    
+                        vector< pair< int , int >> max_base_pairs = ss_predictor(RNA_sequence);
+                        cout<<"Maximum base pairs = "<< max_base_pairs.size()<< endl;
+                        for (int i = 0; i< max_base_pairs.size(); i++)
+                        {
+                            cout << max_base_pairs[i].first << " "<< max_base_pairs[i].second<< endl;
+                        }
+                    }
+             </code></pre>
+            
+
+        </section>
+        <section id="time-complexity" >
+            <h2>Time Complexity Analysis of RNA Secondary Structure Prediciton Algorithm</h2>
+  <br>
+  
+
+  <h2>Complexity:</h2>
+  <br>
+  <h3>Time Complexity Analysis</h3>
+    <p>The time complexity of the <code>ss_predictor</code> function is analyzed based on the nested loops and operations performed within those loops:</p>
+
+    <h4>Best Case Scenario</h4>
+    <p>In the best case, where the RNA sequence does not contain any valid base-pairing (e.g., a sequence of identical bases like "AAAAA..."), the innermost loop will perform fewer operations. However, this does not significantly reduce the overall complexity due to the structure of nested loops. Thus, the best case time complexity remains O(n^3).</p>
+
+    <h4>Average Case Scenario</h4>
+    <p>In typical cases where the RNA sequence has a mix of bases, each possible pair is checked for compatibility (AU, UA, CG, GC), leading to an average time complexity of O(n^3). This is because for each base pair (i, j), a nested loop iterates over potential pairing positions 't' to form the secondary structure, resulting in substantial computations.</p>
+
+    <h4>Worst Case Scenario</h4>
+    <p>The worst case occurs when the sequence is structured in such a way that every possible combination of bases needs to be checked and stored. This also results in a time complexity of O(n^3).</p>
+<br>
+    <h3>Space Complexity Analysis</h3>
+    <p>The space complexity of the algorithm is primarily dictated by the storage of the dynamic programming table, <code>OPT</code>, which is a two-dimensional vector of size (n+1) x (n+1), each cell of which can potentially hold a vector of pairs (in the worst case, storing all possible base pairs for subproblems). Therefore, the space complexity is O(n^2), considering the storage of pairs is proportional to n in the worst case.</p>
+<br>
+    <h2>Conclusion</h2>
+    <p>The RNA secondary structure prediction algorithm, implemented via dynamic programming, offers a cubic time complexity, O(n^3), which is feasible for moderately sized sequences. Although the space complexity is quadratic, O(n^2), careful consideration should be given to memory management when dealing with very long RNA sequences. The algorithm is efficient in typical bioinformatics applications but may require optimization for high-throughput or large-scale genomic datasets.</p>
+            
+            <br>
+       
+        
+        
+
+    </main>
+    <footer>
+        <p>Documentation created by Chinmay, Dev, Parth, Dhananjay and Harsh. © 2024</p>
+    </footer>
+</body>
+</html>
