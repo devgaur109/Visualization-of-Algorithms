@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirkpatrick-Seidel Algorithm</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Kirkpatrick-Seidel Algorithm</h1>
+        <nav>
+            <ul>
+                
+                <li><a href="kps2.html">Introduction</a></li>
+                <li><a href="kps2.html">Details</a></li>
+                <li><a href="KPS_example.html">Example</a></li>
+                <li><a href="#implementation">Implementation</a></li>
+                <li><a href="kps_references.html">References</a></li>
+                <li><a href="main.html">Home</a></li>
+                </ul>
+        </nav>
+    </header>
+    <main>
+
+        <section id="implementation">
+            <h2>Pseudo Code :</h2>
+            <strong>UPPER HULL :</strong>
+            <pre><code>
+             1. Initialize Points with Extreme x-coordinates:
+                - Identify p_min and p_max as the points in S with the least and largest x-coordinates, respectively.
+             
+             2. Sorting Points:
+                - Sort all points of S by their x-coordinate.
+             
+             3. Finding Median x-coordinate:
+                - Determine the median x-coordinate m_x of the sorted points in S.
+             
+             4. Dividing the Set:
+                - Divide S into two subsets based on m_x:
+                  - S_left contains points with x(p) < m_x.
+                  - S_right contains points with x(p) ≥ m_x.
+             
+             5. Vertical Line at Median:
+                - Define L as the vertical line where x = m_x.
+             
+             6. Identifying Bridge Points:
+                - Find points p_l and p_r on the upper bridge for S_left and S_right with respect to line L.
+             
+             7. Discarding Internal Points:
+                - Discard points within the quadrilateral formed by p_min, p_l, p_r, and p_max.
+                - The resulting subsets are S_left' and S_right'.
+             
+             8. Recursive Computation of Upper Hulls:
+                - Compute the upper hull for the left subset recursively:
+                  - H_left := UPPER-HULL(S_left').
+                - Compute the upper hull for the right subset recursively:
+                  - H_right := UPPER-HULL(S_right').
+             
+             9. Combining Left and Right Hulls:
+                - Concatenate the hulls with the upper bridge to form the full upper hull:
+                  - RETURN concatenation(H_left, [upper bridge], H_right).
+             </code></pre>
+             <strong>UPPER BRIDGE :</strong>
+            <pre><code>
+                FUNCTION UPPER-BRIDGE(S: Set of points, L: vertical line x = a)
+             1. CANDIDATES := Empty Set
+
+             2. IF SIZE(S) = 2 THEN
+                    RETURN pair of points from S where the first has a smaller x-coordinate
+
+             3. PAIRS := Arbitrarily pair up points in S into pairs (pi, pj)
+                    If there is an odd number of points, insert the unpaired point into CANDIDATES.
+
+             4. FOR EACH (pi, pj) IN PAIRS DO
+                IF x(pi) = x(pj) THEN
+                    IF y(pi) > y(pj) THEN
+                        INSERT pi INTO CANDIDATES
+                    ELSE
+                        INSERT pj INTO CANDIDATES
+                ELSE
+                    k(pi, pj) := (y(pi) - y(pj)) / (x(pi) - x(pj))
+
+             5. K' := MEDIAN(slopes of pairs in PAIRS)
+
+             6. SMALL := {(pi, pj) IN PAIRS | slope < K'}
+                EQUAL := {(pi, pj) IN PAIRS | slope = K'}
+                LARGE := {(pi, pj) IN PAIRS | slope > K'}
+
+             7. Find a supporting line h with slope K'
+                MAX := Set of points pi IN S such that (y(pi) - K' * x(pi)) is maximized
+                pk := point in MAX with minimum x-coordinate
+                pm := point in MAX with maximum x-coordinate
+
+             8. IF h contains the bridge (i.e., x(pk) ≤ a AND x(pm) > a) THEN
+                    RETURN (pk, pm)
+
+             9. IF h only has points of S to the left of or on L THEN
+                    FOR ALL (pi, pj) IN LARGE UNION EQUAL DO
+                        INSERT pj INTO CANDIDATES
+                    FOR ALL (pi, pj) IN SMALL DO
+                        INSERT pi AND pj INTO CANDIDATES
+
+             10. IF h only has points of S to the right of L THEN
+                    FOR ALL (pi, pj) IN SMALL UNION EQUAL DO
+                        INSERT pi INTO CANDIDATES
+                    FOR ALL (pi, pj) IN LARGE DO
+                        INSERT pi AND pj INTO CANDIDATES
+
+             11. RETURN UPPER-BRIDGE(CANDIDATES, L)
+
+             </code></pre>
+
+        </section>
+        <section id="time-complexity" >
+            <h2>Time Complexity Analysis of the Kirkpatrick-Seidel Algorithm</h2>
+  <br>
+  <h3>Overview:</h3>
+  <p>The Kirkpatrick-Seidel algorithm finds the convex hull of a set of points in O(N log H) time, where N is the total number of points and H is the number of points on the convex hull. The UPPER-HULL function is the main recursive driver, and UPPER-BRIDGE is a subroutine called at each recursive step to find the bridge.</p>
+  <br>
+
+  <h3>Justification:</h3>
+  <p>The justification for the time complexity of the Kirkpatrick-Seidel algorithm stems from the UPPER-BRIDGE function's ability to operate in linear time and the divide-and-conquer approach of UPPER-HULL.</p>
+  <br>
+
+  <h3>Detailed Analysis:</h3>
+  <br>
+
+  <ul>
+    <li><strong>Collecting Input Points:</strong> Input collection is O(N), since it's a simple operation of storing the points.</li>
+    <br>
+    <li><strong>Pairing Points in UPPER-BRIDGE:</strong> O(N/2) for pairing points, simplifying to O(N).</li>
+    <br>
+    <li><strong>Finding Median Slope in UPPER-BRIDGE:</strong> Median slope determination is O(N) using a linear-time median-finding algorithm.</li>
+    <br>
+    <li><strong>Classifying Pairs in UPPER-BRIDGE:</strong> Classifying pairs into SMALL, EQUAL, and LARGE takes O(N).</li>
+    <br>
+    <li><strong>Supporting Line and Bridge Detection in UPPER-BRIDGE:</strong> O(N) for finding the supporting line h and determining bridge points.</li>
+    <br>
+    <li><strong>Recursive Preparation in UPPER-BRIDGE:</strong> Linear-time operations for inserting candidates for recursive calls.</li>
+    <br>
+    <li><strong>Recursive UPPER-HULL Calls:</strong> The UPPER-HULL function recursively halves the problem set, leading to a logarithmic number of calls, log H.</li>
+  </ul>
+  <br>
+
+  <h3>Total Time Complexity:</h3>
+  <p>The total time complexity is a product of the linear operations within UPPER-BRIDGE and the logarithmic depth of recursion in UPPER-HULL, resulting in O(N log H).</p>
+  <br>
+
+  <h3>Best and Worst Case:</h3>
+  <ul>
+    <br>
+    <li><strong>Best Case:</strong> The best case occurs when the recursive calls of UPPER-HULL quickly find the bridge, minimizing the number of recursive calls, yet it is still O(N) due to linear operations within UPPER-BRIDGE.</li>
+    <br>
+    <li><strong>Worst Case:</strong> The worst case is efficiently handled by ensuring the problem set is halved at each recursive step, maintaining the O(N log H) complexity.</li>
+  </ul>
+  <br>
+
+  <h3>Space Complexity:</h3>
+    <p>Space complexity is driven by the input storage and the recursion stack. Since the UPPER-BRIDGE function operates in-place for the most part, space complexity is O(N) for storing points, plus O(log H) for the recursion stack.</p>
+    <br>
+
+  <h3>Conclusion:</h3>
+  <p>The Kirkpatrick-Seidel algorithm, through the linear-time operations of UPPER-BRIDGE and the divide-and-conquer approach of UPPER-HULL, achieves a time complexity of O(N log H). The algorithm remains efficient across both best and worst-case scenarios due to the careful pairing and classification of points and the logarithmic reduction of the problem set size in UPPER-HULL.</p>
+            
+            <br>
+       
+        
+        
+
+    </main>
+    <footer>
+        <p>Documentation created by Chinmay, Dev, Parth and Harsh. © 2024</p>
+    </footer>
+</body>
+</html>

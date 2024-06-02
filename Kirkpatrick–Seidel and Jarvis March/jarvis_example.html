@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>JARVIS MARCH ALGORITHM</title>
+        <link rel="stylesheet" href="style3.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                svg: {
+                    fontCache: 'global'
+                }
+            };
+        </script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    </head>
+<body>
+    <header>
+        <h1>Jarvis March Algorithm</h1>        
+        <nav>
+            <ul>
+                
+                <li><a href="jarvis2.html">Introduction</a></li>
+                <li><a href="jarvis2.html">Details</a></li>
+                <li><a href="#example">Example</a></li>
+                <li><a href="jarvis_interactive.html">Implementation</a></li>
+                <li><a href="jarvis_references.html">References</a></li>
+                <li><a href="main.html">Home</a></li>
+                </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="example">
+        <h2>Interactive Canvas Instructions</h2>
+        <br>
+          <p>
+        Engage with the canvas to plot your points and witness the Jarvis March algorithm in action. Click anywhere within the canvas area to mark a new point; each point will serve as a potential vertex for the convex hull. If you need to adjust the position of a point, simply click and hold to drag it to a new location on the canvas, giving you dynamic control over the configuration of your dataset.
+          </p>
+          <br>
+         <p>
+        Should you wish to remove a point, select it with a click and then press the 'Delete' key to excise it from the canvas. This feature allows for meticulous editing of your point set, ensuring that only the desired points are considered in the convex hull calculation.
+         </p>
+         <br>
+         <p>
+        For those interested in a more spontaneous arrangement, press the 'R' key to populate the canvas with points randomly. This function is particularly useful for stress-testing the algorithm with a diverse range of point configurations or simply to enjoy the unpredictability of random data.
+        </p>
+        <br>
+        <p>
+            These interactive features not only make the process more engaging but also provide a hands-on understanding of how the convex hull is influenced by different point arrangements. Experiment with different scenarios and observe how the Jarvis March algorithm efficiently wraps around the outermost points to form the convex hull.
+        </p>
+        <br>    
+        </section>
+        <div id="canvasContainer">
+            <script src="jarvismarch_final.js"></script>
+        </div>
+    </main>
+    <footer>
+        <p>Documentation created by Chinmay, Dev, Parth and Harsh. © 2024</p>
+    </footer>
+ </body>
+</html>
