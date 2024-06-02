@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>JARVIS MARCH ALGORITHM</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script>
+            MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']]
+                },
+                svg: {
+                    fontCache: 'global'
+                }
+            };
+        </script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    </head>
+<body>
+    <header>
+        <h1>Jarvis March Algorithm</h1>
+        <nav>
+            <ul>
+                
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#algorithm">Details</a></li>
+            <li><a href="jarvis_example.html">Example</a></li>
+            <li><a href="jarvis_interactive.html">Implementation</a></li>
+            <li><a href="jarvis_references.html">References</a></li>
+            <li><a href="main.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="introduction">
+            <h2>Jarvis March Algorithm Introduction</h2>
+            <p>
+                The Jarvis March algorithm, also widely recognized as the Gift Wrapping algorithm, provides an elegant and intuitive strategy for identifying the convex hull of a collection of points in a two-dimensional plane. At its core, the convex hull can be visualized as the tightest convex shape that entirely surrounds all the given points, similar to stretching a rubber band around the extremities of these points until it snugly encases them. This visualization captures the essence of the algorithm's functionality—meticulously determining the outermost points that delineate this boundary.
+
+Originating from the field of computational geometry, the Jarvis March algorithm is celebrated for its simplicity and direct approach. It metaphorically 'wraps' a string around the outer points in a sequential manner, akin to wrapping a gift, which elucidates its alternate moniker. This methodological wrapping is not just a mechanical process but a deliberate traversal that ensures every point lying on the boundary of this convex polygon is identified and included, leaving no outlier untouched.
+
+The algorithm's beauty lies in its straightforwardness, making it accessible to beginners in computational geometry while still being a powerful tool in the hands of experienced practitioners. Its procedural steps, devoid of complex mathematical computations, allow for an easy-to-follow logical sequence that gradually builds up the convex hull, one edge at a time. This approachable nature, however, does not detract from its effectiveness. On the contrary, the Jarvis March algorithm is capable of handling a wide range of scenarios, from simple to complex point configurations, with the same level of precision and efficiency.
+
+Moreover, the algorithm has a rich applicability across various domains that require the processing and analysis of geometrical data. Whether it's in computer graphics for rendering shapes, in geographic information systems for mapping boundaries, or in robotics for obstacle detection and navigation, the Jarvis March algorithm serves as a foundational technique that enables sophisticated spatial analysis and decision-making processes.
+
+Despite its numerous advantages, the algorithm's performance is closely tied to the characteristics of the input set—specifically, the number of points defining the convex hull. This relationship underscores the importance of understanding the algorithm's computational complexity and its implications on efficiency, particularly for large datasets. Nevertheless, the Jarvis March algorithm remains a vital tool in computational geometry, offering a perfect blend of simplicity, elegance, and utility that stands the test of time.
+            </p>
+        </section>
+        <br>
+        <section id="algorithm">
+            <h2>Jarvis March Algorithm Details</h2>
+            <p>The Jarvis March algorithm, also known as the Gift Wrapping algorithm, is an intuitive method for finding the convex hull of a set of points. The convex hull can be thought of as the shape formed by an elastic band stretched around the outermost points. Here's a detailed explanation of the algorithm with examples to clarify each step:</p>
+        
+            <h3>Step 1: Initialization</h3>
+            <p><strong>Objective</strong>: Identify the starting point of the convex hull.</p>
+            <p><strong>Process</strong>: Among all the points, find the point with the lowest y-coordinate, referred to as the 'anchor point'. This point is guaranteed to be part of the convex hull. In case of a tie for the lowest y-coordinate, the point with the lower x-coordinate is chosen as the anchor. This anchor point is typically denoted as \(P_0\).</p>
+            <p><strong>Example</strong>: Consider a set of points: \(A(1,1), B(2,3), C(5,1), D(3,4), E(4,2)\). Point \(A\) would be \(P_0\) because it has the lowest y-coordinate.</p>
+            <br>
+            
+            <h3>Step 2: Finding the Next Hull Point</h3>
+            <p><strong>Objective</strong>: Select the most counterclockwise point relative to the current one to form the convex hull.</p>
+            <p><strong>Process</strong>: Set the current point \(P_i\) (initially \(P_0\)) as the reference. For each point \(P_j\), determine if it is the most counterclockwise by examining the orientation formed by the triplet (\(P_i, P_j, P_k\)) for every other point \(P_k\). The point that results in all other points being to its right is the next hull point, \(P_{next}\).</p>
+            <p><strong>Example</strong>: From \(P_0 = A\), looking at points \(B, C, D, E\), \(B\) would be \(P_{next}\) because it is the most counterclockwise point from \(A\).</p>
+            <br>
+            <h3>Step 3: Check if Hull is Complete</h3>
+            <p><strong>Objective</strong>: Determine if the algorithm has traversed all the exterior points.</p>
+            <p><strong>Process</strong>: Check if \(P_{next} = P_0\). If true, the convex hull is complete. Otherwise, \(P_{next}\) becomes the new reference point for the next iteration.</p>
+            <p><strong>Example</strong>: If \(P_{next}\) after \(B\) is \(A\), the hull is complete. If not, we continue.</p>
+            <br>
+            <h3>Step 4: Repeat Finding the Next Hull Point</h3>
+            <p><strong>Objective</strong>: Continue iterating over the remaining points to construct the hull.</p>
+            <p><strong>Process</strong>: With \(P_i\) now set to \(P_{next}\), repeat the process described in Step 2. This iterative process continues until the algorithm returns to the starting point \(P_0\), thus completing the hull.</p>
+            <p><strong>Example</strong>: Continuing the example, if \(P_{next}\) was \(C\) after \(B\), we'd check counterclockwise from \(C\).</p>
+            <br>
+            <h3>Step 5: Output the Convex Hull</h3>
+            <p><strong>Objective</strong>: Return the sequence of hull points.</p>
+            <p><strong>Process</strong>: The points identified as \(P_{next}\) are sequentially ordered as they were discovered. This ordered list represents the vertices of the convex hull, traced counterclockwise starting from the anchor point.</p>
+            <p><strong>Example</strong>: The hull formed from our example set might be \(A \rightarrow B \rightarrow D \rightarrow C \rightarrow A\), outlining the convex hull.</p>
+            <br>
+            <p><strong>Properties and Considerations</strong>: The Jarvis March algorithm has a time complexity of \(O(nh)\), where \(n\) is the total number of points, and \(h\) is the number of points on the convex hull. This makes it less efficient for larger datasets, especially when \(h\) is large. It is particularly advantageous for its simplicity and ease        
+        </section>
+        
+               
+       
+
+        
+    </main>
+    <footer>
+        <p>Documentation created by Chinmay, Dev, Parth and Harsh. © 2024</p>
+    </footer>
+</body>
+</html>

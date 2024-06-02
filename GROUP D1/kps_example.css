@@ -1,0 +1,200 @@
+
+html {
+    font-size: 25px; 
+  }
+  
+  
+  header h1 {
+    font-size: 3rem; 
+  }
+  
+  
+  nav ul li a {
+    font-size: 1.5rem; 
+    padding: 15px 25px; 
+  }
+  
+  
+  header nav ul {
+    display: flex;
+    justify-content: space-around; /* Distribute space evenly around items */
+    align-items: center;
+    padding: 0 10px; 
+  }
+  
+  
+  header {
+    padding: 10px 0; /
+  }
+  
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Style for the header */
+  header {
+    width: 100%;
+    background-color: #2c3e50;
+    padding: 0 0;
+    color: white;
+    text-align: center;
+  }
+  
+  /* Style for h1 elements */
+  header h1 {
+    font-size: 2.5rem; /* Larger font size */
+    margin-bottom: 20px;
+  }
+  
+ 
+  nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    background-color: #333;
+  }
+  
+  nav ul li {
+    margin: 0 10px; /* Spacing between buttons */
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    padding: 15px 30px; /* Larger clickable area */
+    display: block;
+    font-size: 1.25rem; /* Increased font size */
+    background-color: #000000;
+    color: white; /* White text color */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  /* Hover effect for buttons */
+  nav ul li a:hover {
+    background-color: #14bbee; /* Orange color on hover */
+  }
+  ul li a {
+    text-decoration: none;
+    padding: 15px 30px; /* Larger clickable area */
+    display: absolute;
+    font-size: 1.25rem;
+    background-color: #000000; 
+    color: white; /* White text color */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  /* Hover effect for buttons */
+  ul li a:hover {
+    background-color: #14bbee; /* Orange color on hover */
+  }
+  
+  
+  /* Style for the main content */
+  main {
+    width: 100%; 
+    max-width: none; 
+    margin: 40px auto; 
+    padding: 40px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden; 
+    margin-top: 10px;
+  }
+  /* Footer styling */
+  footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+  }
+  
+  body {
+    padding: 0; 
+    padding-top: 0px; /* Space for fixed header */
+    padding-bottom: 60px; /* Space for fixed footer */
+    font-family: 'Arial', sans-serif;
+    background: #f7f7f7; 
+    color: #333; 
+    line-height: 1.6;
+    padding-top: 10px; 
+    padding-bottom: 60px; 
+  }
+  
+  
+  #convex-hull-demo {
+    
+  }
+  
+  
+  @media (max-width: 768px) {
+    
+  }
+  
+  
+  .toggle-theme {
+   
+  }
+  h2 {
+    border-bottom: 4px solid #008000; /* Thicker green line for bold appearance */
+    padding-bottom: 10px; /* Add some space below the text */
+    margin-bottom: 20px; /* Space below the border */
+  }
+  .hidden {
+    display: none;
+  }
+  
+  .content-section {
+    margin-bottom: 20px;
+  }
+  
+  .next-btn, .back-btn {
+    margin: 10px;
+    padding: 5px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .next-btn:hover, .back-btn:hover {
+    background-color: #0056b3;
+  }
+  canvas {
+    border: 1px solid #000;
+  }
+  #statusText {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    margin: 20px;
+    font-size: 18px;
+    color: #666;
+  }
+  
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: fixed;
+    right: 780px auto; /* Adjust as needed, for right margin */
+    bottom: 90px;
+    z-index: 1000;
+
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
